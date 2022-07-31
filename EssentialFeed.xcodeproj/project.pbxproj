@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 		7401165028930228004593F9 /* EssentialFeed.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7401164728930228004593F9 /* EssentialFeed.framework */; };
 		7401165528930228004593F9 /* EssentialFeedTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7401165428930228004593F9 /* EssentialFeedTests.swift */; };
-		7401165628930228004593F9 /* EssentialFeed.h in Headers */ = {isa = PBXBuildFile; fileRef = 7401164A28930228004593F9 /* EssentialFeed.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		740116622896D59D004593F9 /* RemoteFeedLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 740116612896D59D004593F9 /* RemoteFeedLoader.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -24,9 +24,9 @@
 
 /* Begin PBXFileReference section */
 		7401164728930228004593F9 /* EssentialFeed.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = EssentialFeed.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		7401164A28930228004593F9 /* EssentialFeed.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EssentialFeed.h; sourceTree = "<group>"; };
 		7401164F28930228004593F9 /* EssentialFeedTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EssentialFeedTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		7401165428930228004593F9 /* EssentialFeedTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EssentialFeedTests.swift; sourceTree = "<group>"; };
+		740116612896D59D004593F9 /* RemoteFeedLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteFeedLoader.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -69,7 +69,7 @@
 		7401164928930228004593F9 /* EssentialFeed */ = {
 			isa = PBXGroup;
 			children = (
-				7401164A28930228004593F9 /* EssentialFeed.h */,
+				7401165F2896D56D004593F9 /* Feed Api */,
 			);
 			path = EssentialFeed;
 			sourceTree = "<group>";
@@ -82,6 +82,14 @@
 			path = EssentialFeedTests;
 			sourceTree = "<group>";
 		};
+		7401165F2896D56D004593F9 /* Feed Api */ = {
+			isa = PBXGroup;
+			children = (
+				740116612896D59D004593F9 /* RemoteFeedLoader.swift */,
+			);
+			path = "Feed Api";
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -89,7 +97,6 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7401165628930228004593F9 /* EssentialFeed.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -144,6 +151,7 @@
 				TargetAttributes = {
 					7401164628930228004593F9 = {
 						CreatedOnToolsVersion = 13.4.1;
+						LastSwiftMigration = 1340;
 					};
 					7401164E28930228004593F9 = {
 						CreatedOnToolsVersion = 13.4.1;
@@ -191,6 +199,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				740116622896D59D004593F9 /* RemoteFeedLoader.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -335,6 +344,7 @@
 		7401165A28930228004593F9 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
@@ -356,6 +366,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
@@ -363,6 +374,7 @@
 		7401165B28930228004593F9 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
@@ -391,6 +403,7 @@
 		7401165D28930228004593F9 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = AM3E64D397;
@@ -406,6 +419,7 @@
 		7401165E28930228004593F9 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = AM3E64D397;
