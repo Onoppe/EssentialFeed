@@ -61,7 +61,7 @@ class RemoteFeedLoaderTests: XCTestCase {
         sut.load { _ in }
         
         XCTAssertEqual(client.requestedURLs, [url, url])
-    }
+    } 
     
     // MARK: - Helpers
     
