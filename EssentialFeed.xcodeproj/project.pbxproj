@@ -84,7 +84,7 @@
 		7401165328930228004593F9 /* EssentialFeedTests */ = {
 			isa = PBXGroup;
 			children = (
-				7401165428930228004593F9 /* EssentialFeedTests.swift */,
+				7401166A289AC329004593F9 /* Feed Api */,
 			);
 			path = EssentialFeedTests;
 			sourceTree = "<group>";
@@ -105,6 +105,14 @@
 				740116642897F437004593F9 /* FeedItem.swift */,
 			);
 			path = "Feed Feature";
+			sourceTree = "<group>";
+		};
+		7401166A289AC329004593F9 /* Feed Api */ = {
+			isa = PBXGroup;
+			children = (
+				7401165428930228004593F9 /* EssentialFeedTests.swift */,
+			);
+			path = "Feed Api";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
