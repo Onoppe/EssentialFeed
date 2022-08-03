@@ -35,24 +35,8 @@ public final class RemoteFeedLoader {
                 completion(.failure(.connectivity))
             case let .success(data, response):
                 
-                do {
-                    let items = try FeedItemsMapper.map(data, response: response)
-                        completion(.success(items))
-
-                } catch {
-                    completion(.failure(.invalidData))
-                }
+                completion(FeedItemsMapper.map(data, from: response))
             }
-        }
-    }
-    
-    private func map(_ data: Data, from response: HTTPURLResponse) -> Result {
-        do {
-            let items = try FeedItemsMapper.map(data, response: response)
-            return .success(items)
-            
-        } catch {
-            return .failure(.invalidData)
         }
     }
 }
