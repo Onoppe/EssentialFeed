@@ -193,5 +193,4 @@ class RemoteFeedLoaderTests: XCTestCase {
             messages[index].completion(.success(data, response))
         }
     }
-
 }
