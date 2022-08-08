@@ -41,29 +41,26 @@ class URLSessionHttpClientTests: XCTestCase {
     
     func test_getFromURL_performsGETRequestWithURL() {
       
-        let url = URL(string: "http://any-url.com")!
         let expectation = expectation(description: "Wait for request")
-        URLProtocolStub.observeRequests { request in
-            XCTAssertEqual(request.url, url)
+        URLProtocolStub.observeRequests { [weak self] request in
+            XCTAssertEqual(request.url, self?.anyURL())
             XCTAssertEqual(request.httpMethod, "GET")
             expectation.fulfill()
         }
         
-        makeSUT().get(from: url) { _ in }
+        makeSUT().get(from: anyURL()) { _ in }
         
         wait(for: [expectation], timeout: 1.0)
     }
     
     func test_getFromURL_failsOnRequestError() {
         
-        let url = URL(string: "http://any-url.com")!
-
         let error = NSError(domain: "any error", code: 1)
-        URLProtocolStub.stub(url: url, data: nil, response: nil, error: error)
+        URLProtocolStub.stub(url: anyURL(), data: nil, response: nil, error: error)
         
         let expectation = expectation(description: "Wait for completion")
         
-        makeSUT().get(from: url) { result in
+        makeSUT().get(from: anyURL()) { result in
             switch result {
             case let .failure(receivedError as NSError):
                 XCTAssertEqual(receivedError.domain, error.domain)
@@ -79,6 +76,10 @@ class URLSessionHttpClientTests: XCTestCase {
     }
     
     // MARK: - Helpers
+    
+    private func anyURL() -> URL {
+        URL(string: "http://any-url.com")!
+    }
      
     private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> URLSessionHTTPClient {
         let sut = URLSessionHTTPClient()
