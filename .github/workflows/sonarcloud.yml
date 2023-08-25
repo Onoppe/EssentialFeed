@@ -25,7 +25,7 @@ jobs:
     - uses: actions/checkout@v2
 
     - name: Run xcodebuild with tests
-      run: xcodebuild -project EssentialFeed.xcodeproj/ -scheme EssentialFeed -derivedDataPath Build/ -destination 'platform=iOS Simulator,name=iPhone 11,OS=16.2' -enableCodeCoverage YES clean build test CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO
+      run: xcodebuild -project EssentialFeed.xcodeproj/ -scheme EssentialFeed -derivedDataPath Build/ -destination 'platform=macosx' -enableCodeCoverage YES clean build test CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO
 
     - name: Convert Xcode coverage to SonarCloud format
       run: bash xccov-to-sonarqube-generic.sh build/Logs/Test/*.xcresult/ > sonarqube-generic-coverage.xml
