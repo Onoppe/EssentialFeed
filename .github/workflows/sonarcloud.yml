@@ -13,7 +13,7 @@ jobs:
     env:
         BUILD_WRAPPER_OUT_DIR: buildwrapper # Directory where build-wrapper output will be placed
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
 
     - name: Run xcodebuild with tests
       run: xcodebuild -project EssentialFeed.xcodeproj/ -scheme EssentialFeed -derivedDataPath Build/ -destination 'platform=macosx' -enableCodeCoverage YES clean build test CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO
@@ -43,7 +43,7 @@ jobs:
     needs: test
     steps:
       - name: Checkout repository on branch
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           ref: ${{ github.HEAD_REF }}
           fetch-depth: 0
