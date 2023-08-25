@@ -21,9 +21,6 @@ jobs:
     - name: Convert Xcode coverage to SonarCloud format
       run: bash xccov-to-sonarqube-generic.sh build/Logs/Test/*.xcresult/ > sonarqube-generic-coverage.xml
 
-    - name: Mark build directory as deletable
-      run: xattr -w com.apple.xcode.CreatedByBuildSystem true ./build
-
     - name: Upload coverage report
       uses: actions/upload-artifact@v2
       with:
