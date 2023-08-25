@@ -1,68 +1,71 @@
-# This workflow uses actions that are not certified by GitHub.
-# They are provided by a third-party and are governed by
-# separate terms of service, privacy policy, and support
-# documentation.
-
-# This workflow helps you trigger a SonarCloud analysis of your code and populates
-# GitHub Code Scanning alerts with the vulnerabilities found.
-# Free for open source project.
-
-# 1. Login to SonarCloud.io using your GitHub account
-
-# 2. Import your project on SonarCloud
-#     * Add your GitHub organization first, then add your repository as a new project.
-#     * Please note that many languages are eligible for automatic analysis,
-#       which means that the analysis will start automatically without the need to set up GitHub Actions.
-#     * This behavior can be changed in Administration > Analysis Method.
-#
-# 3. Follow the SonarCloud in-product tutorial
-#     * a. Copy/paste the Project Key and the Organization Key into the args parameter below
-#          (You'll find this information in SonarCloud. Click on "Information" at the bottom left)
-#
-#     * b. Generate a new token and add it to your Github repository's secrets using the name SONAR_TOKEN
-#          (On SonarCloud, click on your avatar on top-right > My account > Security
-#           or go directly to https://sonarcloud.io/account/security/)
-
-# Feel free to take a look at our documentation (https://docs.sonarcloud.io/getting-started/github/)
-# or reach out to our community forum if you need some help (https://community.sonarsource.com/c/help/sc/9)
-
-name: SonarCloud analysis
-
+name: CI
 on:
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
   workflow_dispatch:
-
-permissions:
-  pull-requests: read # allows SonarCloud to decorate PRs with analysis results
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+    types: [opened, synchronize, reopened]
 
 jobs:
-  Analysis:
+  lint:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Analyze with SonarCloud
+    - uses: actions/checkout@v3
+    - name: Run linting
+      uses: norio-nomura/action-swiftlint@3.2.1
+      with:
+        args: --strict
 
-        # You can pin the exact commit or the version.
-        # uses: SonarSource/sonarcloud-github-action@de2e56b42aa84d0b1c5b622644ac17e505c9a049
-        uses: SonarSource/sonarcloud-github-action@de2e56b42aa84d0b1c5b622644ac17e505c9a049
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}   # Generate a token on Sonarcloud.io, add it to the secrets of this repo with the name SONAR_TOKEN (Settings > Secrets > Actions > add new repository secret)
+  test:
+    runs-on: macos-latest
+    env:
+        BUILD_WRAPPER_OUT_DIR: buildwrapper # Directory where build-wrapper output will be placed
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Run xcodebuild with tests
+      run: xcodebuild -project EssentialFeed.xcodeproj/ -scheme EssentialFeed -derivedDataPath Build/ -destination 'platform=iOS Simulator,name=iPhone 11,OS=16.2' -enableCodeCoverage YES clean build test CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO
+
+    - name: Convert Xcode coverage to SonarCloud format
+      run: bash xccov-to-sonarqube-generic.sh build/Logs/Test/*.xcresult/ > sonarqube-generic-coverage.xml
+
+    - name: Mark build directory as deletable
+      run: xattr -w com.apple.xcode.CreatedByBuildSystem true ./build
+
+    - name: Upload coverage report
+      uses: actions/upload-artifact@v2
+      with:
+        path: sonarqube-generic-coverage.xml
+        retention-days: 5 # Artifact will be available only for 5 days.
+
+#    - name: Run build-wrapper
+#      run: |
+#       build-wrapper-macosx-x86 --out-dir ${{ env.BUILD_WRAPPER_OUT_DIR }} xcodebuild clean build
+#
+#    - name: Dump build-wrapper
+#      run: cat ./buildwrapper/build-wrapper-dump.json
+
+  sonar-scan:
+    name: Sonar scan
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - name: Checkout repository on branch
+        uses: actions/checkout@v2
         with:
-          # Additional arguments for the sonarcloud scanner
-          args:
-            # Unique keys of your project and organization. You can find them in SonarCloud > Information (bottom-left menu)
-            # mandatory
-            -Dsonar.projectKey=Onoppe_EssentialFeed
-            -Dsonar.organization=onoppe
-            -Dsonar.tests=.
-            # Comma-separated paths to directories containing main source files.
-            #-Dsonar.sources= # optional, default is project base directory
-            # When you need the analysis to take place in a directory other than the one from which it was launched
-            #-Dsonar.projectBaseDir= # optional, default is .
-            # Comma-separated paths to directories containing test source files
-            # Adds more detail to both client and server-side analysis logs, activating DEBUG mode for the scanner, and adding client-side environment variables and system properties to the server-side log of analysis report processing.
-            #-Dsonar.verbose= # optional, default is false
+          ref: ${{ github.HEAD_REF }}
+          fetch-depth: 0
+
+      - name: Download all workflow run artifacts
+        uses: actions/download-artifact@v3
+
+      - name: Run sonar-scanner
+        uses: SonarSource/sonarcloud-github-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }} # Put the name of your token here
+        with:
+          args: >
+            -Dsonar.projectVersion=${{ github.run_id }}
+            -Dsonar.branch.name=${{ github.ref_name }}
