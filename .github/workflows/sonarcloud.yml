@@ -2,9 +2,6 @@ name: Sonar
 env:
   DEVELOPER_DIR: /Applications/Xcode_14.2.app/Contents/Developer
 'on':
-  push:
-    branches:
-      - "**"
   pull_request_target:
     branches:
       - "**"
@@ -29,7 +26,7 @@ jobs:
           build-wrapper-macosx-x86.zip
       - name: Run tests
         run: >
-          set -o pipefail && xcodebuild -workspace
+          set -o pipefail && xcodebuild -project
           EssentialFeed.xcodeproj -scheme EssentialFeed
           -destination 'platform=macosx'
           -derivedDataPath Build/ -enableCodeCoverage YES clean build test
@@ -44,7 +41,7 @@ jobs:
           SONAR_TOKEN: '${{ secrets.SONAR_TOKEN }}'
         run: >
           sonar-scanner-4.5.0.2216-macosx/bin/sonar-scanner
-          -Dsonar.projectName=oauth1-signer-swift
+          -Dsonar.projectName=EssentialFeed
           -Dsonar.organization=onoppe
           -Dsonar.projectKey=Onoppe_EssentialFeed 
           -Dsonar.sources=.
