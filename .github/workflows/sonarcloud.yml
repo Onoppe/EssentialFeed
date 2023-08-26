@@ -44,7 +44,7 @@ jobs:
           -Dsonar.projectName=EssentialFeed
           -Dsonar.organization=onoppe
           -Dsonar.projectKey=Onoppe_EssentialFeed 
-          -Dsonar.sources=.
+          -Dsonar.sources=EssentialFeed
           -Dsonar.swift.project=EssentialFeed.xcodeproj
           -Dsonar.swift.scheme=EssentialFeed
           -Dsonar.cfamily.build-wrapper-output.bypass=true
